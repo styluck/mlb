@@ -25,7 +25,7 @@ def mont_int(f, x_min, x_max, N=1000000):
     y_max = np.max(f(xx))
     y = y_min + (y_max - y_min) * rnd[:, 1]
     i = np.where(y < f(x))
-    outp = np.sum(i[0]) / N * (x_max - x_min) * (y_max - y_min) + y_min * (x_max - x_min)
+    outp = len(i[0]) / N * (x_max - x_min) * (y_max - y_min) + y_min * (x_max - x_min)
     # 画图
     plt.figure()
     plt.plot(x, y, 'go', x[i], y[i], 'bo')
@@ -37,17 +37,20 @@ if __name__=='__main__':
     import numpy as np
     from scipy.integrate import quad
     
-    x_min = 0.001
-    x_max = np.pi
+    x_min = 1 #0.001
+    x_max = 5 #np.pi
     
     def f(x):
-        return 1 / x
+        # fval = x**3 + .5*x*x + 5*x
+        fval = np.log(x)
+        return fval
         # return np.power(x, 3) - np.power(x, 2)
     
-    estimate = mont_int_avg(f, x_min, x_max)
-    # estimate = mont_int(f, x_min, x_max)
     p, _ = quad(f, x_min, x_max)
-    print(f'Real integral: {p:.4f}, Monte Carlo Estimate: {estimate[0]:.4f}')
+    # estimate = mont_int_avg(f, x_min, x_max)
+    # print(f'Real integral: {p:.4f}, Monte Carlo Estimate: {estimate[0]:.4f}')
+    estimate = mont_int(f, x_min, x_max)
+    print(f'Real integral: {p:.4f}, Monte Carlo Estimate: {estimate:.4f}')
     
     
     
