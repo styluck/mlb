@@ -5,8 +5,11 @@
 暨大论文模板：https://github.com/BatchClayderman/LaTeX4JNUBachelor
 
 推荐anaconda版本：https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2020.11-Windows-x86_64.exe
-<img width="2271" height="106" alt="image" src="https://github.com/user-attachments/assets/5aa6eeff-5c53-43f3-816e-0707e7ebfed3" />
 
 https://jnueducn-my.sharepoint.com/:u:/g/personal/xiaolh_jnu_edu_cn/ETaVI5w7irZCtI2BqdWJrE4Bp_F98owm9iBUX51ZvON4Eg?e=HnUKIE
 
 https://www.npackd.org/p/anaconda64/2020.11
+
+
+chp1-2练习数据下载：https://jnueducn-my.sharepoint.com/:f:/g/personal/xiaolh_jnu_edu_cn/EgcxNETYfN1BgeptTyhO1IoBCAHLy0AMMt7zuiREDAL-uQ?e=g4bstp
+
