@@ -4,11 +4,35 @@ Created on Tue Sep 10 09:36:46 2024
 
 @author: lich5
 """
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
 #%% 数据清洗
 # 载入adj_factor、total_mv、close中两个市场的数据。
 
-# 使用 concat() 合并两个市场的数据。
+dir_head = 'chp1_2_data\\'
+name = ['close', 'adj_factor','pb','total_mv']
+close_sz = pd.read_csv(dir_head + 'close'+'_sz'+'.csv')
+adj_factor_sz = pd.read_csv(dir_head + 'adj_factor'+'_sz'+'.csv')
+pb_sz = pd.read_csv(dir_head + 'pb'+'_sz'+'.csv')
+total_mv_sz = pd.read_csv(dir_head + 'total_mv'+'_sz'+'.csv')
+
+close_sh = pd.read_excel(dir_head + 'close'+'_sh'+'.xlsx')
+adj_factor_sh = pd.read_excel(dir_head + 'adj_factor'+'_sh'+'.xlsx')
+pb_sh = pd.read_excel(dir_head + 'pb'+'_sz'+'.xlsx')
+total_mv_sh = pd.read_excel(dir_head + 'total_mv'+'_sz'+'.xlsx')
+
+close_sz.set_index(close_sz.columns[0], inplace = True)
+close_sh.set_index(close_sh.columns[0], inplace = True)
+close_sz.index = pd.to_datetime(close_sz.index, format= '%Y-%m-%d')
+close_sh.index = pd.to_datetime(close_sh.index, format= '%Y-%m-%d')
+
+# 使用 concat() 合并两 个市场的数据。
+close_price = pd.concat([close_sz,close_sh], axis = 1)
+adj_factor = pd.concat([adj_factor_sz,adj_factor_sh], axis = 1)
+pb = pd.concat([pb_sz,pb_sh], axis = 1)
+total_mv = pd.concat([total_mv_sz,total_mv_sh], axis = 1)
 
 # 计算adjusted_close数据。
 
