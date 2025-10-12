@@ -6,7 +6,7 @@ Created on Tue Sep 10 09:36:46 2024
 """
 
 #%% 数据清洗
-# 载入adj_factor、total_mv、close_price中两个市场的数据。
+# 载入adj_factor、total_mv、close中两个市场的数据。
 
 # 使用 concat() 合并两个市场的数据。
 
