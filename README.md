@@ -11,5 +11,6 @@ https://jnueducn-my.sharepoint.com/:u:/g/personal/xiaolh_jnu_edu_cn/ETaVI5w7irZC
 https://www.npackd.org/p/anaconda64/2020.11
 
 
-chp1-2练习数据下载：https://jnueducn-my.sharepoint.com/:f:/g/personal/xiaolh_jnu_edu_cn/EgcxNETYfN1BgeptTyhO1IoBCAHLy0AMMt7zuiREDAL-uQ?e=g4bstp
+数据下载：[https://jnueducn-my.sharepoint.com/:f:/g/personal/xiaolh_jnu_edu_cn/EgcxNETYfN1BgeptTyhO1IoBCAHLy0AMMt7zuiREDAL-uQ?e=g4bstp]
+
 
