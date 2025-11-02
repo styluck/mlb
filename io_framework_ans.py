@@ -3,6 +3,7 @@
 Created on Sun Oct 19 10:49:59 2025
 
 @author: lich5
+将该文件放于代码目录下的data_io文件夹中使用。
 """
 # io.py
 from __future__ import annotations
