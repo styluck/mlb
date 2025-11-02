@@ -1,0 +1,147 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Oct 19 10:49:59 2025
+
+@author: lich5
+"""
+# io.py
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Optional 
+import pandas as pd
+
+def _data_dir() -> Path:
+    return Path(__file__).resolve().parent.parent/'chp3_data'
+
+def _read_one(field: str, market: str) -> Optional[pd.DataFrame]:
+    """
+    读取单个 CSV：例如 field='close', market='sh' -> 读取 ./close_sh.csv
+
+    约定的 CSV 格式：
+      - 第1行：列名（第1列建议为 'date' 或空；第2列开始为资产名称）
+      - 第1列：日期字符串（YYYY-MM-DD 等可被 pandas 解析的格式） 
+
+    返回：
+      pandas.DataFrame，index 为 DatetimeIndex，列为各资产名；若文件不存在返回 None
+    """
+    csv_path = _data_dir() / f"{field}_{market}.csv"
+    # csv_path = Path(f"{field}_{market}.csv")
+    if not csv_path.exists():
+        return None
+
+    # 读取：第一行是表头，第一列作为索引
+    df = pd.read_csv(
+        csv_path,
+        header=0,
+        index_col=0,
+        encoding="utf-8",
+    )
+
+    # 解析日期为 DatetimeIndex，丢弃解析失败的行
+    df.index = pd.to_datetime(df.index, errors="coerce")
+    df = df[~df.index.isna()]
+
+    # 统一将数据转为 float（无法解析的置为 NaN）
+    df = df.apply(pd.to_numeric, errors="coerce")
+
+    # 按时间排序
+    df = df.sort_index()
+
+    return df
+
+def load_data(field: str, startdate: str, enddate: str) -> pd.DataFrame:
+    """
+    载入指定 field 的上/深两个市场数据，并在列上合并。
+
+    输入参数
+    --------
+    field : str
+        字段名（例如：'open' 或 'close'），会尝试读取 `field_sh.csv` 与 `field_sz.csv`
+    startdate : str
+        开始日期（含），如 '2020-01-01'
+    enddate : str
+        结束日期（含），如 '2024-12-31'
+
+    输出
+    ----
+    pandas.DataFrame
+        index 为日期；列名是“资产名”（不含市场层级）。
+        如同名资产同时存在于两市，按 `_MARKETS` 的优先顺序做空值合并（先 sh，后 sz）。
+ 
+    """
+    parts = []
+    
+    _MARKETS = ("sh", "sz")
+    for m in _MARKETS:
+        one = _read_one(field, m)
+        if one is not None and not one.empty:
+            # 临时加上市场层以便后续折叠
+            one.columns = pd.MultiIndex.from_product([[m], one.columns])
+            parts.append(one)
+
+    if not parts:
+        raise FileNotFoundError(
+            f"No CSV found for field='{field}'. Expected files like '{field}_sh.csv' or '{field}_sz.csv'."
+        )
+
+    # 合并两市（列并集、日期并集）
+    both = pd.concat(parts, axis=1).sort_index()
+
+    # 截取日期区间（左右闭区间）
+    start = pd.to_datetime(startdate)
+    end = pd.to_datetime(enddate)
+    both = both.loc[(both.index >= start) & (both.index <= end)]
+
+    # —— 关键改动：按资产名折叠两市列，只保留资产名为列名 ——
+    assets = both.columns.get_level_values(1).unique()
+    out = pd.DataFrame(index=both.index)
+
+    for asset in assets:
+        series = None
+        # 按优先顺序做空值合并（coalesce）
+        for m in _MARKETS:
+            col = (m, asset)
+            if col in both.columns:
+                s = both[col]
+                series = s if series is None else series.combine_first(s)
+        out[asset] = series
+ 
+    return out
+
+
+def write_data(df: pd.DataFrame, field: str) -> None:
+    """
+    将指定 field 的 DataFrame 写回 CSV。
+
+    CSV 格式
+    --------
+    - 第1行写列名（第1列为索引名 'date'）
+    - 第1列为日期字符串（按 YYYY-MM-DD 导出）
+    - 第2列起为资产数据（float）
+    """ 
+
+    if df.index.name is None:
+        df = df.copy()
+        df.index.name = "date"
+        
+    outfile = f"{field}.csv"
+    df.to_csv(outfile, date_format="%Y-%m-%d", encoding="utf-8")
+        
+#%% ------------------------- main -------------------------      
+if __name__=='__main__': 
+    
+    # 载入单个字段（如 'close'），并合并 sh/sz 两市
+    df_close = load_data("close", "2020-01-01", "2024-12-31")
+    print(df_close.columns)  # MultiIndex: level0 为 'sh'/'sz'，level1 为资产名
+    
+    # 载入所有字段（目录下凡是 *_sh.csv 或 *_sz.csv 的都会被识别为字段）
+    # all_data = load_all("2020-01-01", "2024-12-31")
+    # all_data 形如：{'open': df_open, 'close': df_close, ...}
+    
+    # 将最近一次缓存的 close 写回到 close_sh.csv 和 close_sz.csv
+    write_data("close")
+
+    
+    
+# [EOF]
