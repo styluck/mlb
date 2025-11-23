@@ -14,3 +14,4 @@ https://www.npackd.org/p/anaconda64/2020.11
 数据下载：https://jnueducn-my.sharepoint.com/:f:/g/personal/xiaolh_jnu_edu_cn/Et3FVvZEu_tAgMoteYBCfHwBAMMU6VMoTfAKDkxXHHcXAQ?e=UUznZA
 
 
+期末作业分组表：https://docs.qq.com/sheet/DZWlxV0djT3d5Tnpw?tab=BB08J2
