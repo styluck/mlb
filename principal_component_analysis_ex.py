@@ -23,15 +23,20 @@ print(f"Data shape: {X_train.shape}")
 print(f"Labels shape: {y_train.shape}") 
 
 
-
+'''
 # Normalize the data to [0, 1] and flatten the data
-X_train = X_train/255.0
-X_train_flat = X_train.reshape(-1, 28*28)
+# write here
+X_train = ?
+X_train_flat = X_train.reshape(-1, 28 * 28) 
+''' 
 
 
+'''
 # Apply PCA to reduce to 3 components for visualization
-pca = PCA(n_components=3)
-X_pca = pca.fit_transform(X_train_flat)
+# write here
+pca = ?
+X_pca = ?
+''' 
 
 # Print variance explained by the two components
 explained_variance = pca.explained_variance_ratio_
@@ -53,14 +58,19 @@ ax.set_zlabel('Principal Component 3')
 
 plt.show()
 
-
+'''
 # Apply PCA for dimensionality reduction
-pca = PCA(n_components=20)
-X_reduced = pca.fit_transform(X_train_flat)
-
-
+# write here
+n_components = 50 # Number of principal components
+pca = ?
+X_reduced = ?
+''' 
+ 
+'''
 # Reconstruct the data from reduced dimensions
-X_reconstructed = pca.inverse_transform(X_reduced)
+# write here
+X_reconstructed = ?
+''' 
 
 # Visualize original and reconstructed images
 n_samples = 10  # Number of images to visualize
