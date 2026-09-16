@@ -4,4 +4,4 @@
 
 暨大论文模板：https://github.com/BatchClayderman/LaTeX4JNUBachelor
 
-数据下载：https://jnueducn-my.sharepoint.com/:f:/g/personal/xiaolh_jnu_edu_cn/IgC3RTZ2Kn9TTKcYLRTBne-jAU_bdAQov3RgRVYr_cXp2zk?e=zEHzWx
+数据下载：https://jnueducn-my.sharepoint.com/:f:/g/personal/xiaolh_jnu_edu_cn/IgC3RTZ2Kn9TTKcYLRTBne-jAU_bdAQov3RgRVYr_cXp2zk?e=M72rMH
