@@ -1,159 +1,136 @@
-"""CSV loading and writing tools for experiment 1.
+"""Data I/O framework for experiment 1.
 
-Complete the sections marked TODO. Keep the public function names and their
-parameters unchanged so that the supplied self-check can call them.
+This template follows the structure and behavior of the original
+``codes/data_io/io_framework.py``. Complete the sections marked TODO without
+changing the public function names or parameters.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
+import os
+from typing import Optional
 
 import pandas as pd
 
 
-DEFAULT_DATA_DIR = (
-    Path(__file__).resolve().parents[3]
-    / "chp3_data"
-    / "sample_code"
-    / "dataset"
-)
 MARKETS = ("sh", "sz")
 
 
-def _parse_period(
-    start_date: str,
-    end_date: str,
-) -> tuple[pd.Timestamp, pd.Timestamp]:
-    """Parse and validate the requested closed date interval."""
-    start = pd.to_datetime(start_date, errors="raise")
-    end = pd.to_datetime(end_date, errors="raise")
+def _data_dir() -> str:
+    """Return the fixed directory containing the course CSV files."""
+    return "C:/Users/dataset"
+
+
+def _read_one(field: str, market: Optional[str]) -> Optional[pd.DataFrame]:
+    """Read and clean one CSV file.
+
+    ``field="close", market="sh"`` reads ``close_sh.csv``. When ``market``
+    is ``None``, the function reads ``<field>.csv``. A missing file returns
+    ``None``, matching the original framework.
+    """
+    if market is None:
+        filename = f"{field}.csv"
+    else:
+        filename = f"{field}_{market}.csv"
+    csv_file = os.path.join(_data_dir(), filename)
+
+    if not os.path.exists(csv_file):
+        return None
 
     # TODO 1:
-    # Raise ValueError if start is later than end.
-
-    return start, end
-
-
-def _read_market(
-    field: str,
-    market: str,
-    data_dir: str | Path,
-) -> pd.DataFrame:
-    """Read and clean one market CSV file.
-
-    The expected file name is ``<field>_<market>.csv``. The first CSV column
-    stores dates and must become a sorted, duplicate-free DatetimeIndex.
-    """
-    data_dir = Path(data_dir)
-    csv_path = data_dir / f"{field}_{market}.csv"
-
-    # TODO 2:
-    # If csv_path does not exist, raise FileNotFoundError and include the path
-    # in the error message.
-
-    # TODO 3:
-    # Read the CSV with its first column as the index.
+    # Read csv_file and use the first CSV column as the DataFrame index.
     # data = ...
 
-    # TODO 4:
-    # Convert the index to datetime with errors="coerce".
-    # Remove rows whose dates could not be parsed.
+    # TODO 2:
+    # Convert the index to datetime with errors="coerce", then remove rows
+    # whose dates could not be parsed.
 
-    # TODO 5:
-    # Convert every data column to numeric with errors="coerce".
-    # Sort the date index and keep the last row for duplicated dates.
+    # TODO 3:
+    # Convert all data columns to numeric with errors="coerce".
+    # Sort the index and keep the last row for duplicated dates.
 
-    raise NotImplementedError("Complete _read_market().")
-
-
-def _add_market_prefix_if_needed(
-    sh: pd.DataFrame,
-    sz: pd.DataFrame,
-) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Prefix duplicated asset names with their market names.
-
-    Columns appearing in only one market keep their original names. If a name
-    appears in both markets, the two output names become ``sh_<name>`` and
-    ``sz_<name>``.
-    """
-    duplicated_names = set(sh.columns).intersection(sz.columns)
-    if not duplicated_names:
-        return sh, sz
-
-    sh = sh.rename(
-        columns={name: f"sh_{name}" for name in duplicated_names}
-    )
-    sz = sz.rename(
-        columns={name: f"sz_{name}" for name in duplicated_names}
-    )
-    return sh, sz
+    raise NotImplementedError("Complete _read_one().")
 
 
 def data_load(
     field: str,
     start_date: str,
     end_date: str,
-    data_dir: str | Path = DEFAULT_DATA_DIR,
 ) -> pd.DataFrame:
-    """Load Shanghai and Shenzhen data in a closed date interval.
+    """Load one field from Shanghai and Shenzhen market CSV files.
 
-    Parameters
-    ----------
-    field
-        Data field such as ``"close"`` or ``"open"``.
-    start_date, end_date
-        Inclusive date boundaries accepted by ``pandas.to_datetime``.
-    data_dir
-        Directory containing ``<field>_sh.csv`` and ``<field>_sz.csv``.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A date-indexed matrix containing columns from both markets.
+    As in the original framework, columns are temporarily grouped by market.
+    When the same asset occurs in both markets, Shanghai values have priority
+    and missing observations are filled by Shenzhen values.
     """
     if not isinstance(field, str) or not field.strip():
         raise ValueError("field must be a non-empty string")
 
-    start, end = _parse_period(start_date, end_date)
+    start = pd.to_datetime(start_date, errors="raise")
+    end = pd.to_datetime(end_date, errors="raise")
+    if start > end:
+        raise ValueError("start_date must not exceed end_date")
+
+    parts = []
+
+    # TODO 4:
+    # For each market in MARKETS:
+    #   1. Call _read_one(field, market).
+    #   2. Ignore a missing or empty market file.
+    #   3. Add a temporary market level to its columns with
+    #      pd.MultiIndex.from_product().
+    #   4. Append the result to parts.
+
+    # TODO 5:
+    # If parts is empty, raise FileNotFoundError. Mention field and _data_dir()
+    # in the error message.
 
     # TODO 6:
-    # Read the two markets by calling _read_market().
-    # sh = ...
-    # sz = ...
-
-    # Keep this helper call. It prevents ambiguous duplicate column names.
-    # sh, sz = _add_market_prefix_if_needed(sh, sz)
+    # Concatenate parts along columns, sort the date index, and select the
+    # inclusive interval [start, end]. Store the result in both.
 
     # TODO 7:
-    # Concatenate sh and sz along columns, sort the index, remove duplicate
-    # dates if any, and select the inclusive interval [start, end].
-    # result = ...
+    # Reproduce the original merge rule:
+    #   1. Get unique asset names from column level 1.
+    #   2. Create an output DataFrame with the same index as both.
+    #   3. For every asset, inspect markets in MARKETS order.
+    #   4. Use Series.combine_first() so SH has priority and SZ fills NaN.
+    #   5. Store the merged Series under the plain asset name.
 
     # TODO 8:
-    # Set result.index.name to "date" and return result.
+    # Set the output index name to "date" and return it.
 
     raise NotImplementedError("Complete data_load().")
 
 
-def data_write(
-    data: pd.DataFrame,
-    output_file: str | Path,
-) -> Path:
-    """Write a data matrix to CSV and return the output path."""
-    # TODO 9:
-    # Raise TypeError if data is not a pandas DataFrame.
+def load_benchmark(start_date: str, end_date: str) -> pd.DataFrame:
+    """Load ``benchmark.csv`` in the requested closed date interval."""
+    benchmark = _read_one("benchmark", None)
+    if benchmark is None:
+        benchmark_file = os.path.join(_data_dir(), "benchmark.csv")
+        raise FileNotFoundError(f"Benchmark file not found: {benchmark_file}")
 
-    output_path = Path(output_file)
+    start = pd.to_datetime(start_date, errors="raise")
+    end = pd.to_datetime(end_date, errors="raise")
+    if start > end:
+        raise ValueError("start_date must not exceed end_date")
+    return benchmark.loc[start:end]
+
+
+def data_write(data: pd.DataFrame, output_file: str) -> str:
+    """Write a DataFrame to the CSV path given by a string."""
+    # TODO 9:
+    # Check that data is a pandas DataFrame and output_file is a string.
 
     # TODO 10:
-    # Create output_path.parent when it does not exist.
+    # Get the output directory from output_file and create it when necessary.
+    # Use os.path.dirname(), os.path.abspath(), and os.makedirs().
 
     # TODO 11:
-    # Copy data so that this function does not modify the caller's object.
-    # Set the copied index name to "date".
-    # Write it as UTF-8 CSV with dates formatted as YYYY-MM-DD.
+    # Copy data so that the caller's DataFrame is not modified. Set the copied
+    # index name to "date", then write UTF-8 CSV with YYYY-MM-DD dates.
 
     # TODO 12:
-    # Return output_path.
+    # Return output_file unchanged.
 
     raise NotImplementedError("Complete data_write().")
