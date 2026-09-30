@@ -9,14 +9,25 @@
 
 目录结构和编码规范：
 MyProject/
+
 ├── dataset
+
     └──各种数据
+    
 ├──data_io
+
     ├──__init__.py
+    
     └──io_framework.py
+    
 ├──utils
+
     ├──__init__.py
+    
     ├──data_standardize.py
+    
     └──utils.py
+    
 ├──chp3_part1.py   
+
 └── README.md       # 项目说明与使用文档
