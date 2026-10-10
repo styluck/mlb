@@ -1,4 +1,4 @@
-作业邮箱：alswfx@126.com
+作业邮箱：alswfx@126.com  注明：学号+姓名+第N次作业
 
 我的个人邮箱：xiaolh@jnu.edu.cn
 
