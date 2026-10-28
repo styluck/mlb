@@ -10,7 +10,7 @@ import statsmodels.api as sm
 
 # 复用第三章的选股、权重矩阵生成函数。
 sys.path.append(str(Path(__file__).resolve().parents[1]))
-from chp3.stockselection import fac_selection, stock_selection
+from utils.stockselection import fac_selection, stock_selection
 from data_io.io_framework import load_data, load_benchmark
 from utils.FactorTest import normal_ic, rank_ic, factor_test
 from utils.utils import calc_nav
