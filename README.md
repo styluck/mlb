@@ -6,6 +6,7 @@
 
 数据下载：https://jnueducn-my.sharepoint.com/:f:/g/personal/xiaolh_jnu_edu_cn/IgC3RTZ2Kn9TTKcYLRTBne-jAU_bdAQov3RgRVYr_cXp2zk?e=M72rMH
 
+期末作业分组：https://docs.qq.com/sheet/DZVZyYU5Bd0tRQUpz?tab=BB08J2
 
 目录结构和编码规范：
 
